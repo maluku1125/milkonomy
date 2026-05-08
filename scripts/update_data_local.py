@@ -23,15 +23,21 @@ MARKET_DATA_TARGET = os.path.normpath(os.path.join(OUTPUT_DIR, "market.json"))
 
 # 多源 fallback：依序嘗試，第一個成功就用
 GAME_DATA_SOURCES = [
-    # 官方端點（最即時；silent1b/MWIData 自 2025-08 起未再更新）
+    # 官方端點（user 實測這些路徑回 200 但 body 為空 → 可能要 WebSocket）
     "https://www.milkywayidle.com/game_data/init_client_info.json",
-    # 多種可能的官方路徑（MWI 偶爾會微調命名）
-    "https://www.milkywayidle.com/game_data/init_data.json",
-    "https://www.milkywayidle.com/game_data/client_info.json",
-    "https://www.milkywayidle.com/game_data/data.json",
-    # 社群鏡像（fallback）
+    "https://www.milkywayidle.com/game_data/init.json",
+    "https://www.milkywayidle.com/game_data/all.json",
+    "https://www.milkywayidle.com/api/game_data",
+    # 社群同類專案 / 鏡像
     "https://raw.githubusercontent.com/silent1b/MWIData/main/init_client_info.json",
     "https://raw.githubusercontent.com/holychikenz/MWIApi/main/milkyapi.json",
+    # MooLite — 開源 MWI 客戶端，可能有最新資料
+    "https://raw.githubusercontent.com/Ishadijcks/MooLite/main/src/data/clientInfo.json",
+    "https://raw.githubusercontent.com/Ishadijcks/MooLite/main/public/data/init_client_info.json",
+    "https://raw.githubusercontent.com/Ishadijcks/MooLite/main/data/init_client_info.json",
+    # Toolasha — userscript with game data
+    "https://raw.githubusercontent.com/Celasha/Toolasha/main/data/clientInfo.json",
+    "https://raw.githubusercontent.com/Celasha/Toolasha/main/data/init_client_info.json",
 ]
 
 # 市場資料（官方端點 + 社群鏡像備援）
@@ -47,12 +53,29 @@ def fetch(url: str, timeout: int = 30) -> Optional[dict[str, Any]]:
         req = urllib.request.Request(
             url,
             headers={
-                "User-Agent": "milkonomy-personal/1.0 (local-update-script)",
-                "Accept": "application/json",
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+                              "(KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+                "Accept": "application/json,*/*",
+                "Accept-Language": "zh-TW,zh;q=0.9,en;q=0.8",
+                "Referer": "https://www.milkywayidle.com/",
             },
         )
         with urllib.request.urlopen(req, timeout=timeout) as resp:
-            return json.loads(resp.read().decode("utf-8"))
+            status = resp.status
+            body = resp.read()
+            if not body or len(body) < 5:
+                print(f"  ⚠ HTTP {status} 但回傳空 body（{len(body)} bytes）")
+                return None
+            try:
+                return json.loads(body.decode("utf-8"))
+            except json.JSONDecodeError as je:
+                head = body[:200].decode("utf-8", errors="replace")
+                print(f"  ⚠ HTTP {status} 但不是 JSON：{je}")
+                print(f"     前 200 bytes：{head!r}")
+                return None
+    except urllib.error.HTTPError as he:
+        print(f"  ⚠ HTTP {he.code} {he.reason}")
+        return None
     except Exception as e:
         print(f"  ⚠ 失敗：{e}")
         return None
