@@ -48,3 +48,18 @@ python scripts/sync_translations.py --all
 ```
 
 如果想看會更新什麼但暫不寫檔，加 `--dry-run`。
+
+### 如果自動下載拿不到最新版（silent1b 已停更）
+
+可以從遊戲 WebSocket 自己抓一次：
+
+1. Chrome 開 https://www.milkywayidle.com 並登入
+2. F12 → Network 分頁 → 上方點 WS 篩選器
+3. 重新整理頁面（Ctrl+R）
+4. 點開那條 WebSocket 連線（通常檔名像 connect.ws）
+5. 切到 Messages → 找第一筆綠色箭頭 ↓ 的 server 訊息
+   （內容會以 `{"type":"init_client_data","gameVersion":...` 開頭）
+6. 右鍵該訊息 → Copy message → 貼到記事本，存成 `init.json`
+7. 跑：`python scripts/import_data.py 路徑/init.json`
+
+腳本會驗證 schema、印出新增物品清單，確認後寫入。
