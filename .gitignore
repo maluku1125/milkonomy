@@ -16,3 +16,6 @@ vite.config.*.timestamp*
 # Use the pnpm
 package-lock.json
 # yarn.lock
+
+# 評估報告（不入版控）
+Milkonomy-維護評估報告.docx

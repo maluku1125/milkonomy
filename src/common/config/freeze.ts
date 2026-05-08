@@ -16,7 +16,7 @@ export interface FreezeConfig {
 
 export const freezeConfig: FreezeConfig = {
   // 是否启用冻结功能
-  enabled: true,
+  enabled: false,
 
   // 冻结开始时间
   startDate: new Date("2025-10-28T00:00:00"),
@@ -75,4 +75,4 @@ export function formatCountdown(milliseconds: number): { days: number, hours: nu
     minutes: minutes % 60,
     seconds: seconds % 60
   }
-}
+}

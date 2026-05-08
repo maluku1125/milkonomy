@@ -21,15 +21,11 @@ export interface AnnouncementConfig {
 }
 
 export const announcementConfig: AnnouncementConfig = {
-  enabled: true,
-  id: "open-source-2026",
+  enabled: false,
+  id: "personal-fork-2026",
   message: {
-    title: "开源公告",
-    content: "#开源公告"
-  },
-  link: {
-    url: "https://github.com/luyh7/milkonomy",
-    text: "GitHub"
+    title: "",
+    content: ""
   }
 }
 

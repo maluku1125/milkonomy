@@ -14,13 +14,12 @@ export function registerNavigationGuard(router: Router) {
     NProgress.start()
     usePermissionStoreOutside().setRoutes([])
 
-    // 检查冻结期间的路由访问权限
+    // 检查冻结期间的路由访问权限（個人版冻结已停用，仍保留判断邏輯以防未來使用）
     if (isInFreezePeriod()) {
       const routeName = to.name as string
-      // 如果访问的不是允许的页面，重定向到英灵殿
       if (!isRouteAllowed(routeName)) {
         NProgress.done()
-        return { name: "Valhalla" }
+        return { name: "Dashboard" }
       }
     }
   })
