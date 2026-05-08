@@ -5,7 +5,7 @@ export type MessageSchema = typeof lang
 export type Lang = keyof MessageSchema
 
 const storageKey = "lang-storage-key"
-const defaultLang: Lang = "zhCn"
+const defaultLang: Lang = "zhTw"
 
 export function getLang(): Lang {
   return (localStorage.getItem(storageKey) as Lang) ?? defaultLang
