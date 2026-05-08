@@ -30,3 +30,21 @@ pnpm build        # 建置正式版
 
 - 原作者 © 2025 [luyh7](https://github.com/luyh7)
 - 個人 fork 維護：[maluku1125](https://github.com/maluku1125)
+
+## 更新遊戲資料
+
+遊戲資料從第三方社群儲存庫拉取，原作者提供的 GitHub Actions 已停用 cron。
+本專案改用本地腳本，可在自己電腦直接執行：
+
+```bash
+# 1. 抓取最新遊戲資料 + 市場行情
+python scripts/update_data_local.py
+
+# 2. 對新增物品自動產生繁中翻譯（zh-cn → s2t → zh-tw）
+python scripts/sync_translations.py
+
+# 3. （可選）如果 zh-cn 也有缺漏，腳本會列出來讓您手動翻譯
+python scripts/sync_translations.py --all
+```
+
+如果想看會更新什麼但暫不寫檔，加 `--dry-run`。
