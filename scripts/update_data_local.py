@@ -23,6 +23,13 @@ MARKET_DATA_TARGET = os.path.normpath(os.path.join(OUTPUT_DIR, "market.json"))
 
 # 多源 fallback：依序嘗試，第一個成功就用
 GAME_DATA_SOURCES = [
+    # 官方端點（最即時；silent1b/MWIData 自 2025-08 起未再更新）
+    "https://www.milkywayidle.com/game_data/init_client_info.json",
+    # 多種可能的官方路徑（MWI 偶爾會微調命名）
+    "https://www.milkywayidle.com/game_data/init_data.json",
+    "https://www.milkywayidle.com/game_data/client_info.json",
+    "https://www.milkywayidle.com/game_data/data.json",
+    # 社群鏡像（fallback）
     "https://raw.githubusercontent.com/silent1b/MWIData/main/init_client_info.json",
     "https://raw.githubusercontent.com/holychikenz/MWIApi/main/milkyapi.json",
 ]
